@@ -44,16 +44,12 @@ CREATE TABLE IF NOT EXISTS `shopping-cart`.`orders` (
   `quantity` INT NULL DEFAULT NULL,
   `amount` DECIMAL(10,2) NULL DEFAULT NULL,
   `shipped` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`orderid`, `prodid`),
-  INDEX `productid_idx` (`prodid` ASC) VISIBLE,
+  PRIMARY KEY (`orderid`),
+  INDEX `productid_idx` (`prodid`),
   CONSTRAINT `productid`
     FOREIGN KEY (`prodid`)
     REFERENCES `shopping-cart`.`product` (`pid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 
 -- -----------------------------------------------------
