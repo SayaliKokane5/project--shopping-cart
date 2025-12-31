@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: shoppingcart-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shoppingcart
+    ports:
+      - "3306:3306"
+    volumes:
+      - shoppingcart-db:/var/lib/mysql
+      - ./databases/mysql_query.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - shoppingcart-net
+
+  shoppingcart:
+    image: sayalikokane5/shopping-cart:1.0
+    container_name: shoppingcart-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - shoppingcart-net
+
+volumes:
+  shoppingcart-db:
+
+networks:
+  shoppingcart-net:
+    driver: bridge
